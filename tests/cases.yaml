@@ -1,0 +1,115 @@
+# Test messages for the live tests. Every subject is tagged [mc-tNN] and every
+# message carries an "X-Mail-Cleaner-Test: tNN" header. `expect` is where the
+# message should end up after ALL rules have run in order on a TEST account:
+#   INBOX   untouched        or a target name (Dump1 ...)
+# `expect_by` overrides it for a provider where behaviour legitimately differs.
+# age_days is counted back from the day you seed. flags: read, starred, important, replied.
+- id: t01
+  why: bigger than 5 MB
+  from: Alex Friend <friend@example.org>
+  subject: "[mc-t01] Holiday photos"
+  age_days: 10
+  size_mb: 6
+  expect: Dump1
+
+- id: t02
+  why: promo older than 2 years (category + unsubscribe)
+  from: Shop Deals <deals@shop.example>
+  subject: "[mc-t02] 50% off everything"
+  age_days: 800
+  body: "Big sale this week only. To stop these emails, unsubscribe here."
+  gmail_category: promotions
+  expect: Dump2_Promos
+
+- id: t03
+  why: automated sender older than 6 months
+  from: Service <noreply@service.example>
+  subject: "[mc-t03] Your monthly statement is ready"
+  age_days: 240
+  expect: Dump3_Automated
+
+- id: t04
+  why: one-time code older than 30 days
+  from: Bank Security <security@bank.example>
+  subject: "[mc-t04] Your verification code is 482913"
+  age_days: 45
+  expect: Dump4_OTP
+
+- id: t05
+  why: read, never replied to, older than 3 years
+  from: Alex Friend <friend@example.org>
+  subject: "[mc-t05] Lunch next week?"
+  age_days: 1460
+  flags: [read]
+  expect: Archive_Old
+
+- id: t06
+  why: NEGATIVE - starred big file is never touched
+  from: Alex Friend <friend@example.org>
+  subject: "[mc-t06] Starred scan"
+  age_days: 10
+  size_mb: 6
+  flags: [starred]
+  expect: INBOX
+
+- id: t07
+  why: NEGATIVE - recent noreply is too new
+  from: Service <noreply@service.example>
+  subject: "[mc-t07] Your order shipped"
+  age_days: 10
+  expect: INBOX
+
+- id: t08
+  why: NEGATIVE - recent one-time code is too new
+  from: Bank Security <security@bank.example>
+  subject: "[mc-t08] Your login code is 118204"
+  age_days: 5
+  expect: INBOX
+
+- id: t09
+  why: NEGATIVE - unread old mail is not archived
+  from: Alex Friend <friend@example.org>
+  subject: "[mc-t09] Did you see this?"
+  age_days: 1460
+  expect: INBOX
+
+- id: t10
+  why: NEGATIVE - old read mail that you replied to is not archived
+  from: Alex Friend <friend@example.org>
+  subject: "[mc-t10] Re: Plans"
+  age_days: 1460
+  flags: [read, replied]
+  expect: INBOX
+
+- id: t11
+  why: NEGATIVE - keep-sender (config/keep-senders.md) is never touched
+  from: Alerts <alerts@mc-keep.example>
+  subject: "[mc-t11] Disk usage alert"
+  age_days: 240
+  expect: INBOX
+
+- id: t12
+  why: NEGATIVE - important mail is never touched (Yahoo has no "important", so it moves there)
+  from: Shop Deals <deals@shop.example>
+  subject: "[mc-t12] Important: account update"
+  age_days: 800
+  body: "Your account details changed. Unsubscribe from notices here."
+  flags: [important]
+  expect: INBOX
+  expect_by: {yahoo: Dump2_Promos}
+
+- id: t13
+  why: OVERLAP - big old promo matches two rules; first (dump1) wins
+  from: Shop Deals <deals@shop.example>
+  subject: "[mc-t13] Catalogue PDF"
+  age_days: 800
+  size_mb: 6
+  body: "Our full catalogue. Unsubscribe any time."
+  expect: Dump1
+
+- id: t14
+  why: NEGATIVE - "OTP" must match as a whole word, not inside "hotpot"
+  from: Alex Friend <friend@example.org>
+  subject: "[mc-t14] Hotpot night on Friday"
+  age_days: 45
+  expect: INBOX

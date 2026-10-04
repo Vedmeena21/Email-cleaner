@@ -1,0 +1,56 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__gmail__search_gmail_messages",
+      "mcp__gmail__get_gmail_message_content",
+      "mcp__gmail__get_gmail_messages_content_batch",
+      "mcp__gmail__get_gmail_thread_content",
+      "mcp__gmail__get_gmail_threads_content_batch",
+      "mcp__gmail__list_gmail_labels",
+      "mcp__ms365__list-mail-folders",
+      "mcp__ms365__list-mail-child-folders",
+      "mcp__ms365__list-mail-folder-messages",
+      "mcp__ms365__get-mail-message",
+      "mcp__mailcleaner__list_accounts",
+      "mcp__mailcleaner__plan_rule",
+      "mcp__mailcleaner__imap_list_folders",
+      "mcp__mailcleaner__imap_search",
+      "mcp__mailcleaner__start_run",
+      "mcp__mailcleaner__log_actions",
+      "mcp__mailcleaner__finish_run",
+      "Bash(uv run tools/validate_rules.py:*)",
+      "Bash(uv run pytest:*)"
+    ],
+    "deny": [
+      "mcp__gmail__send_gmail_message",
+      "mcp__gmail__draft_gmail_message",
+      "mcp__gmail__manage_gmail_filter",
+      "mcp__ms365__delete-mail-message",
+      "mcp__ms365__delete-mail-folder",
+      "mcp__ms365__delete-mail-attachment",
+      "mcp__ms365__update-mail-folder",
+      "mcp__ms365__send-mail",
+      "mcp__ms365__send-draft-message",
+      "mcp__ms365__forward-mail-message",
+      "mcp__ms365__reply-mail-message",
+      "mcp__ms365__reply-all-mail-message",
+      "mcp__ms365__create-mail-rule",
+      "mcp__ms365__update-mail-rule",
+      "mcp__ms365__delete-mail-rule",
+      "mcp__ms365__update-mailbox-settings"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "mcp__.*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/.claude/hooks/guard.py\""
+          }
+        ]
+      }
+    ]
+  }
+}

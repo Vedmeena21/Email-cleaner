@@ -1,0 +1,22 @@
+# secrets
+.env
+tests/.tokens/
+
+# action logs contain senders and subjects; keep them local
+logs/*
+!logs/README.md
+!logs/.gitkeep
+
+# generated test messages
+tests/out/
+
+# python / uv
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# editor / os
+.DS_Store
+.vscode/
+.claude/settings.local.json

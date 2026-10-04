@@ -1,0 +1,30 @@
+{
+  "mcpServers": {
+    "gmail": {
+      "command": "uv",
+      "args": [
+        "run", "--no-project", "--quiet", "--env-file", ".env",
+        "--with", "workspace-mcp==2.0.0",
+        "workspace-mcp",
+        "--permissions", "gmail:organize",
+        "--tool-tier", "complete",
+        "--disabled-tools", "manage_gmail_filter", "list_gmail_filters", "get_gmail_attachment_content"
+      ]
+    },
+    "ms365": {
+      "command": "npx",
+      "args": [
+        "-y", "@softeria/ms-365-mcp-server@0.158.0",
+        "--enabled-tools",
+        "^(list-mail-folders|list-mail-child-folders|list-mail-folder-messages|get-mail-message|create-mail-folder|move-mail-message|create-draft-email)$"
+      ],
+      "env": {
+        "MS365_MCP_TENANT_ID": "consumers"
+      }
+    },
+    "mailcleaner": {
+      "command": "uv",
+      "args": ["run", "--quiet", "servers/mailcleaner/server.py"]
+    }
+  }
+}
